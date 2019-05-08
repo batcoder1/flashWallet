@@ -75,7 +75,7 @@ export class Web3Service {
       return tokenContractAbstraction;
     } catch (err) {
 
-      console.log(err)
+      return false
     }
 
   }

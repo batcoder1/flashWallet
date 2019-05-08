@@ -21,7 +21,7 @@ export class SenderComponent implements OnInit {
     receiver: '',
     balance: 0,
     account: '',
-    link: 'https://ropsten.etherscan.io/address/0x2912e467f43dda038be780e09238b27a330af5ea'
+    link: ''
   };
 
   status = '';
@@ -42,9 +42,12 @@ export class SenderComponent implements OnInit {
     try {
       console.log('getInstance....')
       this.tokenInstance = await this.web3Service.artifactsToContract(CalileaToken_artifacts)
-      this.refreshBalance();
+      if (this.tokenInstance) {
+        this.refreshTokenBalance();
+
+      }
     } catch (err) {
-      console.log(err)
+      console.log('Calilea Token has not been found in this account')
 
     }
   }
@@ -53,7 +56,10 @@ export class SenderComponent implements OnInit {
       console.log(accounts)
       this.accounts = accounts;
       this.model.account = accounts[0];
-      this.setCardsValues(this.model)
+      this.model.link =  `https://ropsten.etherscan.io/address/${accounts[0]}`;
+      
+      this.refreshEtherBalance(this.model.account)
+
     });
   }
   async setMaxAllowed(){
@@ -117,23 +123,44 @@ export class SenderComponent implements OnInit {
     }
   }
 
-  async refreshBalance() {
+  async refreshEtherBalance(account) {
+    console.log('Refreshing ETH balance');
+
+    try {
+      console.log('Account', account);
+      let etherBalance = await this.web3Service.getBalance(account);
+      this.model.ether = etherBalance
+      let tokenData = { 
+        title: 'Token ', 
+        cols: 1, rows: 1, 
+        value: etherBalance, 
+        label: 'Balance Ether', 
+        currency: 'ETH',
+        icon: 'monetization_on', 
+        link: `https://ropsten.etherscan.io/address/${account}`
+      }
+      this.cards.push(tokenData)
+     
+      
+    } catch (e) {
+      console.log(e);
+      this.setStatus('Error getting balance; see log.');
+    }
+  }
+
+  async refreshTokenBalance() {
     console.log('Refreshing balance');
 
     try {
-      //const deployedCalileaToken = await this.tokenInstance.deployed();
-      console.log(this.tokenInstance);
-      console.log('Account', this.model.account);
-      let etherBalance = await this.web3Service.getBalance(this.model.account);
-      this.model.ether = etherBalance
-
+  
       let tokenBalance = await this.tokenInstance.balanceOf.call(this.model.account)
       let decimals = await this.tokenInstance.decimals.call();
        
       let balance = Number(tokenBalance.toString()) / (10**(decimals.toString()));
       this.model.balance = balance 
       console.log('balance: ' + this.model.balance);
-      this.setCardsValues(this.model)
+      let tokenData = { title: 'Token ', cols: 1, rows: 1, value: balance, label: 'Tokens', currency: 'CAL', icon: 'money', link: 'https://ropsten.etherscan.io/token/0x23803d6ca1b654ca0a0ec607445ce1f50c0a7a3c' }
+      this.cards.push(tokenData)
       
     } catch (e) {
       console.log(e);
@@ -150,12 +177,9 @@ export class SenderComponent implements OnInit {
     console.log('Setting receiver: ' + e.target.value);
     this.model.receiver = e.target.value;
   }
-
-  setCardsValues(model){
-    let  cards = [  
-    { title: 'Token ', cols: 1, rows: 1, value: this.model.ether, label: 'Balance Ether', currency: 'ETH', icon: 'monetization_on', link: 'https://ropsten.etherscan.io/address/0x2912e467f43dda038be780e09238b27a330af5ea'},  
-    { title: 'Token ', cols: 1, rows: 1, value: this.model.balance, label: 'Tokens', currency: 'CAL', icon: 'money', link: 'https://ropsten.etherscan.io/token/0x23803d6ca1b654ca0a0ec607445ce1f50c0a7a3c' }
-   ];  
-    this.cards = [...cards]
+  goEtherscan(url){
+    window.open(url, "_blank");
   }
+
+   
 }
