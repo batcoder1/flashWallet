@@ -6,7 +6,8 @@ import { reject } from 'q';
 declare let require: any;
 const Web3 = require('web3');
 
-
+const CalileaToken_json = require('../../../build/contracts/CalileaToken.json');
+const TokenSale_json = require('.././../../build/contracts/TokenSale.json');
 declare let window: any;
 
 @Injectable()
@@ -14,7 +15,13 @@ export class Web3Service {
   private web3: any;
   private accounts: string[];
   public ready = false;
+  private contracts= {
+    calileaToken: contract,
+    tokenSale: contract
 
+  };
+  private calileaTokenAddress = '0x23803d6ca1b654ca0a0ec607445ce1f50c0a7a3c'
+  private tokenSaleAddress = '0xd305c6143c5FEBf975dad77f641D3851128eF036'
   public accountsObservable = new Subject<string[]>();
 
   constructor() {
@@ -37,6 +44,8 @@ export class Web3Service {
         await window.ethereum.enable();
         this.web3 = window.web3
         this.web3.eth.defaultAccount = this.web3.eth.accounts[0]
+        const account = await this.web3.eth.getCoinbase() 
+        console.log(`**** Account: ${account}`)
         // Acccounts now exposed
         await this.refreshAccounts()
 
@@ -59,22 +68,45 @@ export class Web3Service {
 
   }
 
-  public async artifactsToContract(artifacts) {
-    console.log('artifactsToContract....')
+  public async getInstanceCalileaToken() {
+    console.log('getInstanceCalileaToken....')
     try {
-      let calileaTokenAddress = '0x23803d6ca1b654ca0a0ec607445ce1f50c0a7a3c'
+      
       if (!this.web3) {
         const delay = new Promise(resolve => setTimeout(resolve, 100));
         await delay;
-        return await this.artifactsToContract(artifacts);
+        return await this.getInstanceCalileaToken();
       }
-      const contractAbstraction = contract(artifacts);
+      console.log ('web3 connected')
+      let contractAbstraction = contract(CalileaToken_json);
       contractAbstraction.setProvider(this.web3.currentProvider);
-      let tokenContractAbstraction = await contractAbstraction.at(calileaTokenAddress)
-      console.log(tokenContractAbstraction)
-      return tokenContractAbstraction;
+      contractAbstraction = await contractAbstraction.at(this.calileaTokenAddress)
+        
+      return contractAbstraction
     } catch (err) {
+      console.log(err)
+      return false
+    }
 
+  }
+  public async getInstanceTokenSale() {
+    console.log('getInstanceTokenSale....')
+    try {
+      
+      if (!this.web3) {
+        const delay = new Promise(resolve => setTimeout(resolve, 100));
+        await delay;
+        return await this.getInstanceTokenSale();
+      }
+      console.log ('web3 connected')
+      
+      let contractAbstraction = contract(TokenSale_json);  
+      contractAbstraction.setProvider(this.web3.currentProvider);
+      contractAbstraction = await contractAbstraction.at(this.tokenSaleAddress)
+      return contractAbstraction
+
+    } catch (err) {
+      console.log(err)
       return false
     }
 
@@ -88,7 +120,8 @@ export class Web3Service {
         return false;
       }
       if (!this.accounts || this.accounts.length !== accs.length || this.accounts[0] !== accs[0]) {
-        
+        console.log ('accs')
+        console.log (accs)
         this.accountsObservable.next(accs);
         this.accounts = accs;
       }
@@ -122,8 +155,28 @@ export class Web3Service {
     return gasEstimated
   }
 
-  formatAmount(amount){
-    return this.web3.utils.toWei(amount, "ether")
+  toWei(amount){
+    let _amount = amount
+    if (!this.web3.utils.isBigNumber(amount))
+      _amount = amount.toString()
+
+    console.log(_amount)
+    return this.web3.utils.toWei(_amount, "ether")
   }
+
+  toEther(amount){
+    return this.web3.utils.fromWei(amount, 'ether')
+  }
+    
+    // Listen for events emitted from the contract
+  listenForEvents() {
+      this.contracts.tokenSale.Sell({}, {
+          fromBlock: 0,
+          toBlock: 'latest',
+        }).watch(function(error, event) {
+          console.log("event triggered", event);
+           
+        })
+      }
     
 }

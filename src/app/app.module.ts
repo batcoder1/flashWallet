@@ -9,11 +9,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { SenderModule } from './sender/sender.module';
 import { SharedModule } from './shared/shared.module';
+import { SaleComponent } from './sale/sale.component';
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    SaleComponent
   ],
   imports: [
     BrowserAnimationsModule,
