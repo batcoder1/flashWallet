@@ -1,0 +1,63 @@
+<mat-card class="card">
+  <mat-card-header color="secundary" fxLayout="row">
+    <mat-card-title>
+      <mat-icon>account_balance_wallet</mat-icon>Wallet
+    </mat-card-title>
+    <mat-menu mat-menu--top-right #appMenu="matMenu" xPosition="before" yPosition="below">
+      <button mat-menu-item (click)="goEtherscan(model.link)">Watch in Etherscan</button>
+    </mat-menu>
+    <div fxFlex></div>
+    <button mat-icon-button [matMenuTriggerFor]="appMenu">
+      <mat-icon>more_horiz</mat-icon>
+    </button>
+
+  </mat-card-header>
+  <mat-card-content class="dashboard-card-content">
+    <div>{{model.account}}</div> {{card.currency}}
+  </mat-card-content>
+</mat-card>
+
+
+<mat-grid-list cols="2" rowHeight="150px">
+  <mat-grid-tile *ngFor="let card of cards" [colspan]="card.cols" [rowspan]="card.rows">
+    <mat-card mat-cell-12 class="dashboard-card">
+      <mat-card-header fxLayout="row">
+
+        <mat-card-title>{{card.title}} {{ card.currency}}</mat-card-title>
+        <mat-menu mat-menu--top-right #appMenu="matMenu" xPosition="before" yPosition="below">
+          <button mat-menu-item (click)="goEtherscan(card.link)">Watch in Etherscan</button>
+        </mat-menu>
+        <div fxFlex></div>
+        <button mat-icon-button [matMenuTriggerFor]="appMenu">
+          <mat-icon>more_horiz</mat-icon>
+        </button>
+
+      </mat-card-header>
+      <mat-card-content class="dashboard-card-content">
+        <div class="token">{{card.value}}</div>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+</mat-grid-list>
+
+
+<mat-card class="card">
+  <mat-card-header color="secundary">
+    <mat-card-title>
+      Send Token
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="dashboard-card-content-send">
+    <mat-form-field class="address-field">
+      <input type="text" matInput id="receiver" placeholder="Receiver Address" (change)="setReceiver($event)">
+    </mat-form-field>
+    <mat-form-field>
+      <input type="text" matInput id="amount" placeholder="Amount" (change)="setAmount($event)">
+    </mat-form-field>
+
+    <button mat-raised-button id="send" class="buttonSend" (click)="sendCoin()">
+      <mat-icon>send</mat-icon>Send
+    </button>
+  </mat-card-content>
+</mat-card>
