@@ -11,7 +11,6 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es5",
     "typeRoots": [
       "node_modules/@types",
       "src/typings.d.ts"
@@ -20,7 +19,9 @@
       "es2017",
       "dom"
     ],
-    "module": "es2015",
+    
+    "module": "commonjs",  
+    "target": "es5",  
     "baseUrl": "./"
   }
 }

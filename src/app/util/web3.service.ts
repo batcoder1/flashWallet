@@ -20,8 +20,13 @@ export class Web3Service {
     tokenSale: contract
 
   };
-  private calileaTokenAddress = '0x23803d6ca1b654ca0a0ec607445ce1f50c0a7a3c'
-  private tokenSaleAddress = '0xd305c6143c5FEBf975dad77f641D3851128eF036'
+/* Contracts in Ropsten network  
+   private calileaTokenContract = '0x80ea7a8870266eef66cb3d03880851fa4c378d14'
+  private tokenSaleContract = '0xC669d352Eb9DB6d02242F1d32B8AA173BF09cACc' 
+  */
+// Contracts in Ganache local network
+  private calileaTokenContract = '0xbC41FD4d113E8Dd9F823Ef11Ed56DE7661eB9dc6'
+  private tokenSaleContract = '0xde63CE70f7872Dd18D2A1B1E46F9eDDeFc074A86'
   public accountsObservable = new Subject<string[]>();
 
   constructor() {
@@ -80,7 +85,7 @@ export class Web3Service {
       console.log ('web3 connected')
       let contractAbstraction = contract(CalileaToken_json);
       contractAbstraction.setProvider(this.web3.currentProvider);
-      contractAbstraction = await contractAbstraction.at(this.calileaTokenAddress)
+      contractAbstraction = await contractAbstraction.at(this.calileaTokenContract)
         
       return contractAbstraction
     } catch (err) {
@@ -102,7 +107,8 @@ export class Web3Service {
       
       let contractAbstraction = contract(TokenSale_json);  
       contractAbstraction.setProvider(this.web3.currentProvider);
-      contractAbstraction = await contractAbstraction.at(this.tokenSaleAddress)
+      contractAbstraction = await contractAbstraction.at(this.tokenSaleContract)
+      
       return contractAbstraction
 
     } catch (err) {
@@ -111,7 +117,7 @@ export class Web3Service {
     }
 
   }
-
+  
   async refreshAccounts() {
     try {
       let accs = await this.web3.eth.getAccounts()
@@ -157,8 +163,7 @@ export class Web3Service {
 
   toWei(amount){
     let _amount = amount
-    if (!this.web3.utils.isBigNumber(amount))
-      _amount = amount.toString()
+    _amount = amount.toString()
 
     console.log(_amount)
     return this.web3.utils.toWei(_amount, "ether")
@@ -166,6 +171,9 @@ export class Web3Service {
 
   toEther(amount){
     return this.web3.utils.fromWei(amount, 'ether')
+  }
+  toBigNumber(amount){
+    return this.web3.utils.toBigNumber(amount)
   }
     
     // Listen for events emitted from the contract

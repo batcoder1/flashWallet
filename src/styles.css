@@ -1,124 +1,189 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
- 
+
+body {
+  margin: 0;
+}
+
+.title{
+   padding-top: 1rem;
+} 
 mat-form-field {
-    margin-right: 1rem;
-    width: 95%;
+  margin-right: 1rem;
+  width: 95%;
+}
+.action-button{
+  margin-right: 5rem!important;
+}
+ 
+
+.section{
+  margin-bottom: 2rem;
+}
+.mat-card-header .mat-card-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.grid-container {
+  margin: 1rem;
+}
+
+.card {
+  margin: 10px;
+  color: #705b4d;
+
+  -webkit-box-shadow: 2px 3px 6px 1px rgba(0, 0, 0, 0.58);
+  -moz-box-shadow: 2px 3px 6px 1px rgba(0, 0, 0, 0.58);
+  box-shadow: 2px 3px 6px 1px rgba(0, 0, 0, 0.58);
+}
+
+.more-button {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+}
+
+.dashboard-card-content {
+  font-size: 1.5rem;
+  font-weight: bold;
+
+}
+
+.wallet-card-content {
+  font-size: 1.5rem;
+  font-weight: bold;
+
+}
+
+.dashboard-card-content-send {
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+
+.token {
+  color: #3b3b3b
+}
+
+.options-button {
+  text-align: right
+}
+
+.mat-card-actions {
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
+}
+
+.mat-icon {
+  vertical-align: middle !important;
+  padding-bottom: 3px;
+}
+.padding-left5{
+  padding-left: 5rem
+}
+
+.token-card{
+  margin-top: 1rem;
+  min-width: 10rem;
+  color: white;
+  background: #e03906;
+  background: -moz-linear-gradient(45deg, #e03906 0%,  #e03906 83%, #f19742 100%);
+  background: -webkit-gradient(left bottom, right top, color-stop(0%, #f07550), color-stop(83%, #e03906), color-stop(100%, #f19742));
+  background: -webkit-linear-gradient(45deg, #e03906 0%,  #e03906 83%, #f19742 100%);
+  background: -o-linear-gradient(45deg, #e03906 0%,   #e03906 83%, #f19742 100%);
+  background: -ms-linear-gradient(45deg, #e03906 0%,  #e03906 83%, #f19742 100%);
+  background: linear-gradient(45deg, #e03906 0%,      #e03906 83%, #f19742 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e03906', endColorstr='#f19742', GradientType=1 );
+}
+.token-card-content {
+  color: white;
+  font-size: 1.2rem;
+}
+
+@media only screen and (max-width: 730px) {
+  .dashboard-card-content {
+    font-size: 1.2rem;
+    font-weight: bold;
+
   }
+
+  .wallet-card-content {
+    font-size: 1rem;
+    font-weight: bold;
+
+  }
+
+  .dashboard-card-content-send {
+    text-align: left;
+    font-size: 0.7rem;
+    font-weight: bold;
+  }
+
+}
+
+@media only screen and (max-width: 450px) {
+
+  .dashboard-card-content {
+    font-size: 1rem !important;
+    font-weight: bold;
+  }
+
+  .wallet-card-content {
+    font-size: 0.5rem !important;
+    font-weight: bold;
+
+  }
+  .dashboard-card-content-send {
+    font-size: 0.5rem;
+  }
+
+  mat-card-title {
+    font-size: 0.9rem !important;
+    font-weight: bold;
+
+  }
+
+  mat-icon {
+    font-size: 0.7rem !important;
+  }
+  .padding-left5{
+    padding-left: .5rem
+  }
+}
+
+@media only screen and (max-width: 330px) {
+  .dashboard-card-content {
+    font-size: 1rem !important;
+    font-weight: bold;
+
+  }
+
+  .wallet-card-content {
+    font-size: 0.6rem !important;
+    font-weight: bold;
+
+  }
+
+  mat-card-title {
+    font-size: 0.9rem !important;
+    font-weight: bold;
+
+  }
+
+  mat-icon {
+    font-size: 0.9rem !important;
+  }
+
+}
+
+  
+@media only screen and (max-width: 600px) {
    
-  .mat-card {
-    -webkit-box-shadow: 2px 3px 6px 1px rgba(0,0,0,0.58);
-    -moz-box-shadow: 2px 3px 6px 1px rgba(0,0,0,0.58);
-    box-shadow: 2px 3px 6px 1px rgba(0,0,0,0.58);
-  }
-   
-  
-  .mat-card-header .mat-card-title  {
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-   
-  .grid-container {  
-    margin: 1rem;  
-  }
-  .card {  
-    margin: 10px;
-    color: #003eaa
-  }  
-  .more-button {  
-    position: absolute;  
-    top: 5px;  
-    right: 10px;  
-  }  
-  .dashboard-card-content {  
-    font-size: 1.5rem;
-    font-weight: bold;
-    
-  }
-  .wallet-card-content {  
-    font-size: 1.5rem;
-    font-weight: bold;
-    
-  }
-  .dashboard-card-content-send {  
-    text-align: center;  
-    font-size: 1.1rem;
-    font-weight: bold;
-  }
-  
-  
-  .token{
-    color: #3b3b3b
-  }
-  .options-button{
-    text-align: right
-  }
-  
-  .mat-card-actions {
-      display: flex;
-      box-sizing:border-box;
-      align-items: center;
-  }
-  
-  @media only screen and (max-width: 730px) {
-    .dashboard-card-content {  
-      font-size: 1.2rem;
-      font-weight: bold;
-      
-    }
-    .wallet-card-content {  
-      font-size: 1rem;
-      font-weight: bold;
-      
-    }
-    .dashboard-card-content-send {  
-      text-align: left;  
-      font-size: 0.9rem;
-      font-weight: bold;
-    }
-    
-  }
-  
-  @media only screen and (max-width: 450px) {
-    .dashboard-card-content {  
-      font-size: 1rem!important;
-      font-weight: bold;
-      
-    }
-    .wallet-card-content {  
-      font-size: 0.8rem!important;
-      font-weight: bold;
-      
-    }
-    mat-card-title {  
-      font-size: 0.9rem!important;
-      font-weight: bold;
-      
-    }
-    mat-icon {
-      font-size: 1.1rem!important;
-    }
-  
-  }
-  
-  @media only screen and (max-width: 330px) {
-    .dashboard-card-content {  
-      font-size: 1rem!important;
-      font-weight: bold;
-      
-    }
-    .wallet-card-content {  
-      font-size: 0.6rem!important;
-      font-weight: bold;
-      
-    }
-    mat-card-title {  
-      font-size: 0.9rem!important;
-      font-weight: bold;
-      
-    }
-    mat-icon {
-      font-size: 0.9rem!important;
-    }
-  
-  }
+ .token-card {
+   margin-right: 1rem;
+ }
+}
+

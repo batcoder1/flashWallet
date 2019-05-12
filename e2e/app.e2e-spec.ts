@@ -1,4 +1,5 @@
 import { AppPage } from './app.po';
+import { expect } from 'chai';
 
 describe('Flash Wallet App', () => {
   let page: AppPage;
@@ -9,6 +10,6 @@ describe('Flash Wallet App', () => {
 
   it('should display welcome message', () => {
     page.navigateTo();
-    expect(page.getHeader()).toContain('Flash Wallet');
+    expect(page.getHeader()).has('Flash Wallet');
   });
 });

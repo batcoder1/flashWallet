@@ -9,11 +9,13 @@ import { MatSnackBar } from '@angular/material';
 })
 export class SaleComponent implements OnInit {
   accounts: string[];
-  tokenPrice: 1000000000000000;
+  rate = 0; 
+  etherAmount:any
   tokenSold: Number;
   progressPercent: Number;
 
   tokenInstance: any;
+  calileaInstance: any;
 
   tokensAvailable = 750000;
   model = {
@@ -24,7 +26,7 @@ export class SaleComponent implements OnInit {
     account: '',
     link: ''
   };
-  numberOfTokens = 0;
+  numberOfTokens:Number;
 
   constructor(private web3Service: Web3Service, private matSnackBar: MatSnackBar) {
   }
@@ -38,7 +40,8 @@ export class SaleComponent implements OnInit {
     try {
       console.log('getInstance....')
       this.tokenInstance = await this.web3Service.getInstanceTokenSale()
-      console.log(this.tokenInstance)
+      this.calileaInstance = await this.web3Service.getInstanceCalileaToken()
+      
       if (this.tokenInstance) {
         this.refreshTokenBalance();
       }
@@ -59,18 +62,18 @@ export class SaleComponent implements OnInit {
     });
   }
   async refreshTokenBalance() {
-    let tokenPrice = await this.tokenInstance.tokenPrice();
+    let rate = await this.tokenInstance.rate();
 
-    console.log(tokenPrice)
+    console.log(rate)
 
-    let tokenPriceFormatted = tokenPrice 
-        ? this.web3Service.toEther(tokenPrice.toString())
+    let rateFormatted = rate 
+        ? this.web3Service.toEther(rate.toString())
         : 0
-console.log(tokenPriceFormatted)
+console.log(rateFormatted)
     let tokenSold = await this.tokenInstance.tokensSold();
     let tokenSoldFormatted = Number(tokenSold)
 
-    this.tokenPrice = tokenPriceFormatted
+    this.rate = rateFormatted
     this.tokenSold = tokenSoldFormatted
 
     this.progressPercent = (Math.ceil(tokenSoldFormatted) / this.tokensAvailable) * 100;
@@ -79,18 +82,23 @@ console.log(tokenPriceFormatted)
 
   async buyTokens() {
     try {
-      console.log(this.numberOfTokens)
-      console.log(this.tokenPrice)
-      this
-      let valueSale = this.numberOfTokens * this.tokenPrice
-      console.log(valueSale)
-      let valueSaleWei = this.web3Service.toWei(valueSale)
-      let result = await this.tokenInstance.buyTokens(this.numberOfTokens, {
-        from: this.model.account,
-        value: valueSaleWei,
-        gas: 500000 // Gas limit)
+      let calileaTokenAddress = '0xE06bD7136488F4a03dccB5bb419329404D94be19'
 
-      })
+      let numtokensTotales = await this.calileaInstance.balanceOf.call(calileaTokenAddress)
+      let numTokensIcoAvailables = await this.tokenInstance.tokensAvailable.call()
+      console.log(`numtokensTotales: ${numtokensTotales}`)
+      console.log(`numTokensIcoAvailables: ${numTokensIcoAvailables}`)
+   
+      this.rate = this.web3Service.toWei(await this.tokenInstance.rate())
+      console.log(`rate: ${this.rate}`)
+    
+      let receipt = await this.tokenInstance.buyTokens( this.model.account, {
+        from: this.model.account,
+        value: this.web3Service.toWei(this.etherAmount)
+       
+      }) 
+      
+     
       this.numberOfTokens = 0
       this.setStatus('Tokens bought successfully!!!')
     } catch (err) {
@@ -101,6 +109,10 @@ console.log(tokenPriceFormatted)
   }
   setStatus(status) {
     this.matSnackBar.open(status, null, { duration: 3000 });
+  }
+  calculateEther():any{
+    this.etherAmount = Number(this.numberOfTokens) * this.rate;
+    
   }
 
 }

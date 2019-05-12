@@ -10,12 +10,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SenderModule } from './sender/sender.module';
 import { SharedModule } from './shared/shared.module';
 import { SaleComponent } from './sale/sale.component';
+import { WalletComponent } from './wallet/wallet.component';
+import { NoticeComponent } from './notice/notice.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    SaleComponent
+    SaleComponent,
+    WalletComponent,
+    NoticeComponent
   ],
   imports: [
     BrowserAnimationsModule,

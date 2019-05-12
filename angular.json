@@ -22,7 +22,8 @@
             ],
             "styles": [
               "src/styles.css",
-              "src/assets/fonts/material-icons/material-icons.css"
+              "src/assets/fonts/material-icons/material-icons.css",
+              "./node_modules/spectre.css/dist/spectre.min.css"
             ],
             "scripts": []
           },

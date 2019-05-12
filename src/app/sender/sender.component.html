@@ -1,76 +1,38 @@
-<mat-card class="card">
-  <mat-card-header color="secundary" fxLayout="row">
-    <mat-card-title>
-      <mat-icon>account_balance_wallet</mat-icon> Wallet
+
+
+<mat-card>
+  <mat-card-header color="secundary">
+    <mat-card-title  class="title">
+      SEND
     </mat-card-title>
-    <mat-menu mat-menu--top-right #appMenu="matMenu" xPosition="before" yPosition="below">
-      <button mat-menu-item (click)="goEtherscan(model.link)">Watch in Etherscan</button>
-    </mat-menu>
-    <div fxFlex></div>
-    <button mat-icon-button [matMenuTriggerFor]="appMenu">
-      <mat-icon>more_horiz</mat-icon>
-    </button>
-
   </mat-card-header>
-  <mat-card-content class="wallet-card-content">
-    <div fxLayout="row" gdAlignRows="center">
-      <div fxFlex>{{model.account}}</div>
-    </div>
-  </mat-card-content>
-</mat-card>
-
-
-<div fxLayout="column"  fxLayout.xs="row">
-  <div *ngFor="let card of cards">
-
+  <mat-card-content>
     <mat-card class="card">
-      <mat-card-header>
-        <mat-menu mat-menu--top-right #appMenu="matMenu" xPosition="before" yPosition="below">
-          <button mat-menu-item (click)="goEtherscan(card.link)">Watch in Etherscan</button>
-        </mat-menu>
-        <div fxFlex></div>
-        <button mat-icon-button [matMenuTriggerFor]="appMenu">
-          <mat-icon>more_horiz</mat-icon>
-        </button>
-
-      </mat-card-header>
-      <mat-card-content class="dashboard-card-content">
-        <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="start stretch">
-          <div fxFlex="1 1">{{card.title}} </div>
-          <div fxFlex="1 1">{{ card.currency}}</div>
-          <div fxFlex="1 1" class="token">{{card.value}}</div>
-
+        <mat-card-content class="dashboard-card-content-send">
+        <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="center stretch" fxLayoutGap="10px">
+          <div fxFlex="1 1 60%">
+            <mat-form-field class="address-field">
+              <input type="text" matInput id="receiver" placeholder="Receiver Address" (change)="setReceiver($event)">
+            </mat-form-field>
+          </div>
+          <div fxFlex="1 1 20%">
+            <mat-form-field>
+              <input type="text" matInput id="amount" placeholder="Amount" (change)="setAmount($event)">
+            </mat-form-field>
+          </div>    
         </div>
       </mat-card-content>
+
+      <mat-card-footer>
+          <mat-card-actions>
+              <div fxFlex></div>
+            <button mat-raised-button id="send" class="buttonSend action-button" (click)="sendCoin()">
+              <mat-icon>send</mat-icon>Send
+            </button>
+          </mat-card-actions>
+      </mat-card-footer>
     </mat-card>
-  </div>
-
-</div>
-
-
-<mat-card class="card">
-  <mat-card-header color="secundary">
-    <mat-card-title>
-      Send Token
-    </mat-card-title>
-  </mat-card-header>
-  <mat-card-content class="dashboard-card-content-send">
-    <div fxLayout="row"   fxLayout.xs="column"  fxLayoutAlign="center stretch"  fxLayoutGap="10px">
-      <div fxFlex="1 1 50%" >
-        <mat-form-field class="address-field">
-          <input type="text" matInput id="receiver" placeholder="Receiver Address" (change)="setReceiver($event)">
-        </mat-form-field>
-      </div>
-      <div fxFlex="1 1 30%">
-        <mat-form-field>
-          <input type="text" matInput id="amount" placeholder="Amount" (change)="setAmount($event)">
-        </mat-form-field>
-      </div>
-      <div fxFlex="1 1 20%">
-        <button mat-raised-button id="send" class="buttonSend" (click)="sendCoin()">
-          <mat-icon>send</mat-icon>Send
-        </button>
-      </div>
-    </div>
+    
   </mat-card-content>
+
 </mat-card>

@@ -1,11 +1,22 @@
-.mat-card {
-    -webkit-box-shadow: 2px 3px 6px 1px rgba(0,0,0,0.58);
-    -moz-box-shadow: 2px 3px 6px 1px rgba(0,0,0,0.58);
-    box-shadow: 2px 3px 6px 1px rgba(0,0,0,0.58);
-  }
-   
+ 
    
 
 .progressBar {
-  margin: 1rem;
+  margin-top: 5rem;
+  margin-bottom: 3rem;
+
 }
+
+.currentPrice {
+  background: #cacaca;
+  box-shadow: none;
+  font: 1rem;
+  
+}
+
+ 
+.bold {
+  font-weight: bold;
+  margin: .2rem;
+}
+ 

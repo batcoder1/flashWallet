@@ -106,7 +106,7 @@ export class SenderComponent implements OnInit {
           receiver, 
           amount,
           { from: this.model.account, 
-            gas: 500000 
+            gas: 10000000 
           });
 
         if (!transaction) {
@@ -138,7 +138,7 @@ export class SenderComponent implements OnInit {
         value: etherBalance,
         label: 'Balance Ether',
         currency: 'ETH',
-        icon: 'monetization_on',
+        icon: 'assets/img/tokens/ether.png',
         link: `https://ropsten.etherscan.io/address/${account}`
       }
       this.cards.push(tokenData)
@@ -161,7 +161,7 @@ export class SenderComponent implements OnInit {
       let balance = Number(tokenBalance.toString()) / (10 ** (decimals.toString()));
       this.model.balance = balance
       console.log('balance: ' + this.model.balance);
-      let tokenData = { title: 'Token ', cols: 1, rows: 1, value: balance, label: 'Tokens', currency: 'CAL', icon: 'money', link: 'https://ropsten.etherscan.io/token/0x23803d6ca1b654ca0a0ec607445ce1f50c0a7a3c' }
+      let tokenData = { title: 'Token ', cols: 1, rows: 1, value: balance, label: 'Tokens', currency: 'CAL', icon: 'assets/img/tokens/cal.png', link: 'https://ropsten.etherscan.io/token/0x23803d6ca1b654ca0a0ec607445ce1f50c0a7a3c' }
       this.cards.push(tokenData)
 
     } catch (e) {

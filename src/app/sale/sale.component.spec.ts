@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SaleComponent } from './sale.component';
+import { expect } from 'chai';
 
 describe('SaleComponent', () => {
   let component: SaleComponent;
@@ -20,6 +21,6 @@ describe('SaleComponent', () => {
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(component).true;
   });
 });
