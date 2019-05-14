@@ -3,7 +3,6 @@
 const TokenSale = artifacts.require('./contracts/TokenSale.sol');
 var CalileaToken = artifacts.require("./contracts/CalileaToken.sol");
 
- 
 
 contract('TokenSale', async (accounts) => {
   let tokenInstance;
@@ -18,16 +17,16 @@ contract('TokenSale', async (accounts) => {
 
     tokenInstance = await CalileaToken.deployed() 
     let contract = tokenInstance.address;
-    tokenSaleInstance = await TokenSale.deployed() 
+    tokenSaleInstance = await TokenSale.deployed()
    
   })
   it('initializes the contract with the correct values', async () => {
     
-    let address =  tokenSaleInstance.address
+    let address =  tokenSaleInstance.address;
     
-    let contract = await tokenSaleInstance.tokenContract();
+    let contract = await tokenSaleInstance.wallet();
     let _tokensAvailable = await tokenSaleInstance.tokensAvailable();
-    let price = await tokenSaleInstance.tokenPrice();
+    let price = await tokenSaleInstance.rate();
     
     assert.notEqual(address, 0x0, 'has contract address');
     assert.notEqual(contract, 0x0, 'has token contract address');
@@ -37,55 +36,58 @@ contract('TokenSale', async (accounts) => {
   
   it('facilitates token buying', async() => {
     
-  
-    //await tokenInstance.transfer(tokenSaleInstance.address, tokensAvailable, {from: admin})
+    let tokensAvailable = await tokenSaleInstance.tokensAvailable();
+
+    await tokenInstance.transfer(tokenSaleInstance.address, tokensAvailable, {from: admin})
+    let rate = web3.utils.fromWei(await tokenSaleInstance.rate());
     
-    let numberOfTokens = 10;
-    let value = numberOfTokens * tokenPrice;
-    let balanceCalilea =  await tokenInstance.balanceOf.call(tokenInstance.address)
-    console.log('contract:'+tokenInstance.address)
-    console.log('balance:'+balanceCalilea)
-    console.log('tokenSaleAddress:'+tokenSaleInstance.address)
+    let numberOfTokens = 1000;
+    let etherValue = numberOfTokens * rate;
     let balanceTokenSale = await tokenInstance.balanceOf.call(tokenSaleInstance.address);
-    console.log('balanceTokenSale:'+balanceTokenSale)
-    receipt =  await tokenSaleInstance.buyTokens(numberOfTokens, {
+
+    receipt =  await tokenSaleInstance.buyTokens(buyer, {
         from: buyer,
-        value: value
+        value: web3.utils.toWei(etherValue.toString(), "ether")
       })
 
  
     
-    let amount = await tokenSaleInstance.tokensSold();
-    
+    let tokensSold = await tokenSaleInstance.tokensSold();
+    balanceTokenSale = await tokenInstance.balanceOf.call(tokenSaleInstance.address);
+    let tokensAvailableAfterSale = await tokenSaleInstance.tokensAvailable();
     let balance =  await tokenInstance.balanceOf.call(buyer);
-    console.log('balanceTokenSale:'+balanceTokenSale)
-
+ 
     assert.equal(receipt.logs.length, 1, 'triggers one event');
-    assert.equal(receipt.logs[0].event, 'Sell', 'should be the "Sell" event');
+    assert.equal(receipt.logs[0].event, 'TokensPurchased', 'should be the "TokensPurchased" event');
     
-    assert.equal(amount, numberOfTokens, 'increments the number of tokens sold');
+    assert.equal(tokensSold.toString(), numberOfTokens, 'increments the number of tokens sold');
     assert.equal(balance, numberOfTokens);
-    assert.equal(balanceTokenSale, tokensAvailable - numberOfTokens);
+    assert.equal(balanceTokenSale.toString(), tokensAvailable - numberOfTokens);
+    assert.equal(tokensAvailableAfterSale.toString(), tokensAvailable - numberOfTokens);
     
     
     // Try to buy tokens different from the ether value 
     try{
-       receipt = await tokenSaleInstance.buyTokens(numberOfTokens, {
+      
+       receipt = await tokenSaleInstance.buyTokens( buyer, {
            from: buyer,
-           value: 1
+           value: 10
         });
     } catch(error) {
       assert(error.message.indexOf('revert') >= 0, 'msg.value must equal number of tokens in wei');
     }
 
     try{
-       receipt = await tokenSaleInstance.buyTokens(800000, {
+      numberOfTokens = 8000000
+       etherValue = numberOfTokens * rate;
+
+       receipt = await tokenSaleInstance.buyTokens(buyer, {
             from: buyer,
-            value: numberOfTokens * tokenPrice
+            value: web3.utils.toWei(etherValue.toString(), "ether")
           })
         
     }catch(error) {
-      assert(error.message.indexOf('revert') >= 0, 'cannot purchase more tokens than available');
+      assert(error.message.includes("sender doesn't have enough funds to send tx"));
     }
   });
 
