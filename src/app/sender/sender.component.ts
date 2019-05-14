@@ -39,7 +39,6 @@ export class SenderComponent implements OnInit {
 
   async ngOnInit() {
 
-    console.log(this);
     await this.watchAccount();
     await this.getInstance();
     //this.setMaxAllowed()
@@ -76,7 +75,7 @@ export class SenderComponent implements OnInit {
     this.matSnackBar.open(status, null, { duration: 3000 });
   }
 
-  async sendCoin() {
+  async sendCalileaToken() {
     if (!this.tokenInstance) {
       this.setStatus('CalileaToken is not loaded, unable to send transaction');
       return;
@@ -106,7 +105,7 @@ export class SenderComponent implements OnInit {
           receiver, 
           amount,
           { from: this.model.account, 
-            gas: 10000000 
+            gas: 500000 
           });
 
         if (!transaction) {

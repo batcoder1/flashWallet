@@ -20,13 +20,15 @@ export class Web3Service {
     tokenSale: contract
 
   };
-/* Contracts in Ropsten network  
-   private calileaTokenContract = '0x80ea7a8870266eef66cb3d03880851fa4c378d14'
-  private tokenSaleContract = '0xC669d352Eb9DB6d02242F1d32B8AA173BF09cACc' 
-  */
-// Contracts in Ganache local network
-  private calileaTokenContract = '0xbC41FD4d113E8Dd9F823Ef11Ed56DE7661eB9dc6'
-  private tokenSaleContract = '0xde63CE70f7872Dd18D2A1B1E46F9eDDeFc074A86'
+// Contracts in Ropsten network  
+   private calileaTokenContract = '0x384549eA7d7e5A8e221f6E6bcb89E241424cFaFC'
+  private tokenSaleContract = '0xc6a1ced21b2cd67da06dbd91c67c9dff9b37e27e' 
+ 
+/* Contracts in Ganache local network
+  private calileaTokenContract = '0xFB4F4Db6d9Bef350d92B6Ba14080B5A68ff9b372'
+  private tokenSaleContract = '0x9159A12d38A4BBB5f038d6691cfEec75D5acd1f5'
+ */
+  
   public accountsObservable = new Subject<string[]>();
 
   constructor() {
@@ -35,6 +37,13 @@ export class Web3Service {
     window.addEventListener('load', async () => {
 
       await this.bootstrapWeb3();
+
+    });
+    window.addEventListener('transfer', async() =>{
+        console.log('incoming transfer event')
+      });
+    window.addEventListener('TokensPurchased', async() =>{
+      console.log('incoming TokensPurchased event')
 
     });
   }
@@ -87,6 +96,7 @@ export class Web3Service {
       contractAbstraction.setProvider(this.web3.currentProvider);
       contractAbstraction = await contractAbstraction.at(this.calileaTokenContract)
         
+
       return contractAbstraction
     } catch (err) {
       console.log(err)

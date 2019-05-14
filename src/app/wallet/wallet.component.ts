@@ -37,7 +37,6 @@ export class WalletComponent implements OnInit {
   
     async ngOnInit() {
   
-      console.log(this);
       await this.watchAccount();
       await this.getInstance();
       //this.setMaxAllowed()

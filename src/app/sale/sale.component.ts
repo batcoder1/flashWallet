@@ -1,23 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { Web3Service } from '../util/web3.service';
 import { MatSnackBar } from '@angular/material';
+import { environment } from '../../environments/environment';
 
-@Component({
+
+ @Component({
   selector: 'app-sale',
   templateUrl: './sale.component.html',
   styleUrls: ['./sale.component.css']
 })
 export class SaleComponent implements OnInit {
   accounts: string[];
-  rate = 0; 
-  etherAmount:any
+  rate = 0;
+  etherAmount: any
   tokenSold: Number;
   progressPercent: Number;
-
-  tokenInstance: any;
+  admin: Boolean;
+  tokenSaleInstance: any;
   calileaInstance: any;
 
-  tokensAvailable = 750000;
+  tokensAvailable = 0;
   model = {
     ether: 0,
     amount: 5,
@@ -26,27 +28,35 @@ export class SaleComponent implements OnInit {
     account: '',
     link: ''
   };
-  numberOfTokens:Number;
+  numberOfTokens: Number;
+  // rpsten enviroment
+  // calileaAdminAccount = '0xE06bD7136488F4a03dccB5bb419329404D94be19'
 
+  // ganache test environment
+  calileaAdminAccount = environment.wallet;
   constructor(private web3Service: Web3Service, private matSnackBar: MatSnackBar) {
   }
   async ngOnInit() {
+    this.admin = false;
     this.progressPercent = 0
     await this.watchAccount();
     await this.getInstance();
+
   }
 
   async getInstance() {
     try {
-      console.log('getInstance....')
-      this.tokenInstance = await this.web3Service.getInstanceTokenSale()
+      console.log('Sale: getInstance....')
+      this.tokenSaleInstance = await this.web3Service.getInstanceTokenSale()
       this.calileaInstance = await this.web3Service.getInstanceCalileaToken()
-      
-      if (this.tokenInstance) {
+
+      this.rate = this.web3Service.toWei(await this.tokenSaleInstance.rate())
+      console.log(`rate in: ${this.rate}`)
+      if (this.tokenSaleInstance) {
         this.refreshTokenBalance();
       }
     } catch (err) {
-      console.log('Calilea Token has not been found in this account')
+      console.log('Calilea Token has not been found in this account: ' + err)
 
     }
   }
@@ -55,6 +65,7 @@ export class SaleComponent implements OnInit {
       console.log(accounts)
       this.accounts = accounts;
       this.model.account = accounts[0];
+      this.admin = (this.model.account === this.calileaAdminAccount) ? true : false
       this.model.link = `https://ropsten.etherscan.io/address/${accounts[0]}`;
 
 
@@ -62,43 +73,51 @@ export class SaleComponent implements OnInit {
     });
   }
   async refreshTokenBalance() {
-    let rate = await this.tokenInstance.rate();
+    try {
+      console.log('RefresRokenBalance******************')
+      let rate = await this.tokenSaleInstance.rate();
+      this.tokensAvailable = Number(await this.tokenSaleInstance.tokensAvailable());
+      console.log('tokensAvailable:'+this.tokensAvailable)
+      console.log(rate.toString())
 
-    console.log(rate)
-
-    let rateFormatted = rate 
+      let rateFormatted = rate
         ? this.web3Service.toEther(rate.toString())
         : 0
-console.log(rateFormatted)
-    let tokenSold = await this.tokenInstance.tokensSold();
-    let tokenSoldFormatted = Number(tokenSold)
+      console.log(rateFormatted)
+      let tokenSold = Number(await this.tokenSaleInstance.tokensSold());
+    
+console.log('tokenSold: '+tokenSold)
+      this.rate = rateFormatted
+      this.tokenSold = tokenSold
 
-    this.rate = rateFormatted
-    this.tokenSold = tokenSoldFormatted
+      this.progressPercent = (Math.ceil(tokenSold) / this.tokensAvailable) * 100;
+      console.log(this.progressPercent)
+    } catch (err) {
+      console.log(err)
 
-    this.progressPercent = (Math.ceil(tokenSoldFormatted) / this.tokensAvailable) * 100;
-    console.log(this.progressPercent)
+    }
   }
 
   async buyTokens() {
     try {
-      let calileaTokenAddress = '0xE06bD7136488F4a03dccB5bb419329404D94be19'
 
-      let numtokensTotales = await this.calileaInstance.balanceOf.call(calileaTokenAddress)
-      let numTokensIcoAvailables = await this.tokenInstance.tokensAvailable.call()
-      console.log(`numtokensTotales: ${numtokensTotales}`)
-      console.log(`numTokensIcoAvailables: ${numTokensIcoAvailables}`)
-   
-      this.rate = this.web3Service.toWei(await this.tokenInstance.rate())
-      console.log(`rate: ${this.rate}`)
-    
-      let receipt = await this.tokenInstance.buyTokens( this.model.account, {
+
+      console.log(`tokenSaleInstance.address: ${this.tokenSaleInstance.address}`)
+      console.log(`tokensAvailable: ${this.tokensAvailable}`)
+      let rateBN = await this.tokenSaleInstance.rate();
+      let rate= Number(rateBN.toString());
+      console.log(rate)
+      let etherValue =Number(this.numberOfTokens) * rate;
+      console.log('etherValue: '+etherValue)
+
+
+      let receipt = await this.tokenSaleInstance.buyTokens(this.model.account, {
         from: this.model.account,
-        value: this.web3Service.toWei(this.etherAmount)
-       
-      }) 
-      
-     
+        value:  etherValue,
+        gas: 500000
+      })
+
+
       this.numberOfTokens = 0
       this.setStatus('Tokens bought successfully!!!')
     } catch (err) {
@@ -110,9 +129,33 @@ console.log(rateFormatted)
   setStatus(status) {
     this.matSnackBar.open(status, null, { duration: 3000 });
   }
-  calculateEther():any{
+  calculateEther(): any {
     this.etherAmount = Number(this.numberOfTokens) * this.rate;
-    
+
   }
+
+  async startIco() {
+    let wallet = await this.tokenSaleInstance.wallet()
+    console.log('wallet:' + wallet)
+    
+
+    let initialTokenAvailable = 5000000
+    let initialTokenAvailableWei = this.web3Service.toWei(initialTokenAvailable.toString())
+   
+    await this.tokenSaleInstance.initializeIco(initialTokenAvailable, {
+      from: wallet,
+    })
+    console.log('this.tokenSaleInstance.address:' + this.tokenSaleInstance.address)
+    console.log('this.tokenSaleInstance.address:' + this.tokenSaleInstance.address)
+
+    await this.calileaInstance.transfer(this.tokenSaleInstance.address, initialTokenAvailableWei,
+      {
+        from: wallet,
+        gas: 500000
+      });
+
+  }
+   
+
 
 }
