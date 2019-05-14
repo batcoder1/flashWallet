@@ -5,13 +5,17 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve  --poll=2000",
-    "build": "ng build",
+    "build": "ng build --prod --aot",
+    "static-server": "http-server ./dist",
     "test": "ng test --watch=false",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "postinstall": "node patch.js"
   },
   "private": true,
+  "engines": {
+    "node": "11.14.0"
+  },
   "dependencies": {
     "@angular/animations": "7.1.0",
     "@angular/cdk": "^7.1.0",
@@ -29,6 +33,7 @@
     "core-js": "^2.5.7",
     "dotenv": "^8.0.0",
     "ethers": "^4.0.20",
+    "http-server": "^0.11.1",
     "rxjs": "^6.3.3",
     "spectre.css": "^0.5.8",
     "truffle-contract": "^4.0.1",
