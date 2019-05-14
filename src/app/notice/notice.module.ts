@@ -4,19 +4,17 @@ import { SharedModule } from '../shared/shared.module';
 import { MatSnackBarModule } from '@angular/material';
 import { RouterModule } from '@angular/router';
 import { UtilModule } from '../util/util.module';
-import { SaleComponent } from './sale.component';
-import { FormsModule } from '@angular/forms';
+import { NoticeComponent } from './notice.component';
 
 @NgModule({
   imports: [
     CommonModule,
     SharedModule,
-    FormsModule,
     MatSnackBarModule,
     RouterModule,
     UtilModule
   ],
-  declarations: [SaleComponent],
-  exports: [SaleComponent]
+  declarations: [NoticeComponent],
+  exports: [NoticeComponent]
 })
-export class SaleModule { }
+export class NoticeModule { }

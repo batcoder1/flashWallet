@@ -39,6 +39,8 @@ import {
   MatTooltipModule,
   MatTreeModule,
 } from '@angular/material';
+import { NoticeComponent } from '../notice/notice.component';
+import { FormsModule } from '@angular/forms';
 
 const materialModules = [  
   MatAutocompleteModule,
@@ -82,15 +84,15 @@ const materialModules = [
   imports: [
     CommonModule,
     materialModules,
-    FlexLayoutModule
+    FlexLayoutModule,
+    FormsModule
   ],
   exports: [
     ...materialModules,
-    FlexLayoutModule
+    FlexLayoutModule,
   ],
   providers: [
   ],
-  declarations: []
 })
 export class SharedModule {
 }

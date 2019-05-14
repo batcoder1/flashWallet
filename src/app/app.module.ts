@@ -9,17 +9,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { SenderModule } from './sender/sender.module';
 import { SharedModule } from './shared/shared.module';
-import { SaleComponent } from './sale/sale.component';
-import { WalletComponent } from './wallet/wallet.component';
-import { NoticeComponent } from './notice/notice.component';
+import { WalletModule } from './wallet/wallet.module';
+import { SaleModule } from './sale/sale.module';
+import { NoticeModule } from './notice/notice.module';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    SaleComponent,
-    WalletComponent,
-    NoticeComponent
+   
+     
   ],
   imports: [
     BrowserAnimationsModule,
@@ -28,7 +27,10 @@ import { NoticeComponent } from './notice/notice.component';
     FormsModule,
     HttpClientModule,
     SenderModule,
-    SharedModule
+    SaleModule,
+    WalletModule,
+    NoticeModule,
+    SharedModule,
   ],
 
   providers: [],

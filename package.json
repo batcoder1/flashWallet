@@ -11,7 +11,7 @@
     "e2e": "ng e2e",
     "start": "node server.js",
     "start:dev": "ng serve --host 0.0.0.0",
-    "postinstall": "node patch.js"
+    "postinstall": "ng build --aot --prod"
   },
   "private": true,
   "engines": {
