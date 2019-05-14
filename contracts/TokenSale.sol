@@ -10,8 +10,8 @@ contract TokenSale {
     address payable _wallet;
     CalileaToken  private _token;
     uint256 public tokensSold;
-    uint256 public tokensAvailable;
-     uint256 private _guardCounter = 1;
+    uint256 public tokensAvailable = 0;
+    uint256 private _guardCounter = 1;
 
     // How many token units a buyer gets per wei.
     // The rate is the conversion between wei and the smallest and indivisible token unit.
@@ -36,13 +36,13 @@ contract TokenSale {
      * @param amount amount of tokens purchased
      */
     event TokensPurchased(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount);
- 
+
     event Sell(address _buyer, uint256 _amount);
 
 
     event loguint256(uint256 err);
     event logaddress(address err);
-  
+
     /**
      * @param rate Number of token units a buyer gets per wei
      * @dev The rate is the conversion between wei and the smallest and indivisible
@@ -51,26 +51,27 @@ contract TokenSale {
      * @param wallet Address where collected funds will be forwarded to
      * @param token Address of the token being sold
      */
-    constructor (address payable wallet, CalileaToken token, uint256 rate, uint256 _tokensAvailable ) public {
+    constructor (address payable wallet, CalileaToken token, uint256 rate ) public {
         require(rate > 0, "Crowdsale: rate is 0");
-        require(wallet != address(0), "Crowdsale: wallet is the zero address");
+        require(wallet != address(0), "Crowdsale: error, wallet is address(0)");
         require(address(token) != address(0), "Crowdsale: token is the zero address");
         _token = CalileaToken(token);
-        tokensAvailable = _tokensAvailable;
         _rate = rate;
         _wallet = wallet;
         _token = token;
+
     }
-    function multiply (uint x, uint y) internal pure returns (uint z) {
-        require(y == 0 || (z = x * y) / y == x);
-    }
-    
- 
+
     function endSale () public {
 
             require (msg.sender == _wallet);
             require (_token.transfer(_wallet, _token.balanceOf(address(this))));
             selfdestruct(_wallet);
+    }
+
+    function initializeIco(uint256 _tokensAvailable) public  nonReentrant  {
+        require(msg.sender == _wallet);
+        tokensAvailable = _tokensAvailable;
     }
     /**
     * @dev fallback function ***DO NOT OVERRIDE***
@@ -102,7 +103,7 @@ contract TokenSale {
     function rate() public view returns (uint256) {
         return _rate;
     }
-    
+
     /**
      * @return the amount of wei raised.
      */
@@ -119,7 +120,7 @@ contract TokenSale {
     function buyTokens(address beneficiary) public nonReentrant payable {
 
         uint256 weiAmount = msg.value;
-        _preValidatePurchase(beneficiary, weiAmount);
+        _preValidatePurchase(beneficiary, weiAmount, tokensAvailable);
 
         // calculate token amount to be created
         uint256 tokens = _getTokenAmount(weiAmount);
@@ -128,11 +129,19 @@ contract TokenSale {
         _weiRaised = _weiRaised.add(weiAmount);
 
         _processPurchase(beneficiary, tokens);
+
+        // add tokens to tokens sold counter
+        tokensSold = _updatetokensSold(tokens);
+
+        // substract tokens to tokens availables
+        tokensAvailable = _updatetokensAvailables(tokens);
+
         emit TokensPurchased(msg.sender, beneficiary, weiAmount, tokens);
 
         _updatePurchasingState(beneficiary, weiAmount);
 
         _forwardFunds();
+
         _postValidatePurchase(beneficiary, weiAmount);
     }
 
@@ -145,7 +154,8 @@ contract TokenSale {
      * @param beneficiary Address performing the token purchase
      * @param weiAmount Value in wei involved in the purchase
      */
-   function _preValidatePurchase(address beneficiary, uint256 weiAmount) internal pure {
+   function _preValidatePurchase(address beneficiary, uint256 weiAmount, uint256 _tokensAvailable) internal pure {
+        require(_tokensAvailable > 0, "Crowsale: not tokens availables");
         require(beneficiary != address(0), "Crowdsale: beneficiary is the zero address");
         require(weiAmount != 0, "Crowdsale: weiAmount is 0");
     }
@@ -167,7 +177,7 @@ contract TokenSale {
      * @param tokenAmount Number of tokens to be emitted
      */
     function _deliverTokens(address beneficiary, uint256 tokenAmount) internal {
-        _token.transfer(beneficiary, tokenAmount);
+        _token.transfer(beneficiary, tokenAmount.mul(10**18));
     }
 
     /**
@@ -196,7 +206,7 @@ contract TokenSale {
      * @return Number of tokens that can be purchased with the specified _weiAmount
      */
     function _getTokenAmount(uint256 weiAmount) internal view returns (uint256) {
-        return weiAmount.mul(_rate);
+        return weiAmount.div(_rate);
     }
 
     /**
@@ -204,5 +214,18 @@ contract TokenSale {
      */
     function _forwardFunds() internal {
         _wallet.transfer(msg.value);
+    }
+
+    /**
+     * @dev register tokens sum has been sold.
+     */
+    function _updatetokensSold(uint256 tokens) internal view  returns (uint256)  {
+       return  tokensSold.add(tokens);
+    }
+    /**
+     * @dev update  tokens availables, after they has been sold.
+     */
+    function _updatetokensAvailables(uint256 tokens) internal view  returns (uint256)  {
+       return  tokensAvailable.sub(tokens);
     }
 }

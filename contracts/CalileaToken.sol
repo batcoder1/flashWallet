@@ -107,8 +107,12 @@ contract CalileaToken is ERC20Interface, Owned, SMath {
   	address public crowdsaleAddress;
     uint256 private _guardCounter = 1;
 
+    event loguint256(uint256 err);
+
     mapping(address => uint) balances;
     mapping(address => mapping(address => uint)) allowed;
+    
+  
 
      modifier nonReentrant() {
         _guardCounter += 1;
@@ -157,12 +161,10 @@ contract CalileaToken is ERC20Interface, Owned, SMath {
     // - 0 value transfers are allowed
     // ------------------------------------------------------------------------
     function transfer(address to, uint tokens) public returns (bool success) {
-     
-        
+
         balances[msg.sender] = safeSub(balances[msg.sender], tokens);
         balances[to] = safeAdd(balances[to], tokens);
         emit Transfer(msg.sender, to, tokens);
-       
 
         return true;
 
