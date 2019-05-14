@@ -4,12 +4,13 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve  --poll=2000",
     "build": "ng build --prod --aot",
     "static-server": "http-server ./dist",
     "test": "ng test --watch=false",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "start": "node server.js",
+    "start:dev": "ng serve --host 0.0.0.0",
     "postinstall": "node patch.js"
   },
   "private": true,
