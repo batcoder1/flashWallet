@@ -10,8 +10,9 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "start": "node server.js",
+    "patch": "node patch.js",
     "start:dev": "ng serve --host 0.0.0.0",
-    "postinstall": "ng build --aot --prod && node patch.js"
+    "postinstall": "npm run patch && npm run build"
   },
   "private": true,
   "engines": {
