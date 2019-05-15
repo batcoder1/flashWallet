@@ -1,10 +1,16 @@
 .small{
     font-size: 0.5rem;
 }
+.small{
+    font-size: 0.8rem;
+}
 div {
     padding: .5rem;
   }
  
 .mat-dialog-actions {
     padding-bottom: 1rem;
+}
+.green{
+    color: #06bb06;
 }

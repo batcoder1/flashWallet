@@ -19,7 +19,7 @@ import { DialogModule } from './dialog/dialog.module';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserAnimationsModule,

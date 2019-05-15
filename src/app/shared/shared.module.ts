@@ -49,6 +49,7 @@ import { DialogQrComponent } from '../dialog-qr/dialog-qr.component';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { DialogModule } from '../dialog/dialog.module';
 import { DialogQrModule } from '../dialog-qr/dialog-qr.module';
+import { CopyClipboardDirective } from '../util/copy-clipboard.directive';
 
 const materialModules = [  
   MatAutocompleteModule,
@@ -89,16 +90,21 @@ const materialModules = [
   ]
 
 @NgModule({
+  declarations:[
+    CopyClipboardDirective
+  ],
   imports: [
     CommonModule,
     materialModules,
     FlexLayoutModule,
     FormsModule,
+    
    
   ],
   exports: [
     ...materialModules,
     FlexLayoutModule,
+    CopyClipboardDirective
   ],
   providers: [
     { provide: MAT_DIALOG_DATA, useValue: {}},
