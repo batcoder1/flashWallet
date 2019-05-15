@@ -17,5 +17,7 @@ export class DialogComponent implements OnInit {
   closeDialog() {
     this.dialogRef.close();
   }
-
+  goToMetamask() {
+    window.open('http://metamask.io', "_blank")
+  }
 }

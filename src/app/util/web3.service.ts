@@ -14,7 +14,7 @@ declare let window: any;
 
 @Injectable()
 export class Web3Service {
-   
+
   private web3: any;
   private accounts: string[];
   public ready = false;
@@ -34,7 +34,7 @@ export class Web3Service {
 
   public accountsObservable = new Subject<string[]>();
 
-  constructor( public dialog: MatDialog) {
+  constructor(public dialog: MatDialog) {
 
 
     window.addEventListener('load', async () => {
@@ -81,7 +81,7 @@ export class Web3Service {
     // Non-dapp browsers...
     else {
       let description = 'Non-Ethereum browser detected. You should consider trying MetaMask!'
-      this.openDialog('Error web3', description, 'danger')
+      this.openDialog('Warning!', description, 'danger')
       console.log(description);
     }
 
@@ -199,16 +199,17 @@ export class Web3Service {
 
     })
   }
-  private openDialog( title: string, description: string, type: string){
-    
-    let icon = (type == 'danger')? 'error': 'notification_important'
-    let color = (type == 'danger')? 'warn': 'primary'
-    
+  private openDialog(title: string, description: string, type: string) {
+
+    let icon = (type == 'danger') ? 'error' : 'notification_important'
+    let color = (type == 'danger') ? 'warn' : 'primary'
+
     const dialogRef = this.dialog.open(DialogComponent, {
-      width: '350px',
-      data: {title: title,  description: description , type: type, icon: icon, color: color }
+      data: { title: title, description: description, type: type, icon: icon, color: color }
     });
+    
   }
 
+ 
 
 }

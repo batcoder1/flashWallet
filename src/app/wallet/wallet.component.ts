@@ -140,6 +140,7 @@ export class WalletComponent implements OnInit {
         data: {title: 'wallet', color: 'primary', wallet: wallet }
       });
     }
+   
   
   }
   
