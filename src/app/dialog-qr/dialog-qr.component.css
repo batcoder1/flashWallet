@@ -1,0 +1,10 @@
+.small{
+    font-size: 0.5rem;
+}
+div {
+    padding: .5rem;
+  }
+ 
+.mat-dialog-actions {
+    padding-bottom: 1rem;
+}

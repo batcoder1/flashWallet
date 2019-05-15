@@ -38,9 +38,17 @@ import {
   MatToolbarModule,
   MatTooltipModule,
   MatTreeModule,
+  MAT_DIALOG_DEFAULT_OPTIONS,
+  MAT_DIALOG_DATA,
+  MatDialogRef,
 } from '@angular/material';
 import { NoticeComponent } from '../notice/notice.component';
 import { FormsModule } from '@angular/forms';
+import { DialogComponent } from '../dialog/dialog.component';
+import { DialogQrComponent } from '../dialog-qr/dialog-qr.component';
+import { NgxQRCodeModule } from 'ngx-qrcode2';
+import { DialogModule } from '../dialog/dialog.module';
+import { DialogQrModule } from '../dialog-qr/dialog-qr.module';
 
 const materialModules = [  
   MatAutocompleteModule,
@@ -85,14 +93,22 @@ const materialModules = [
     CommonModule,
     materialModules,
     FlexLayoutModule,
-    FormsModule
+    FormsModule,
+   
   ],
   exports: [
     ...materialModules,
     FlexLayoutModule,
   ],
   providers: [
+    { provide: MAT_DIALOG_DATA, useValue: {}},
+    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},
+    { provide: MatDialogRef, useValue: {} }
   ],
+  entryComponents:[
+    DialogComponent,
+    DialogQrComponent,
+  ]
 })
 export class SharedModule {
 }

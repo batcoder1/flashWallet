@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Web3Service } from '../util/web3.service';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatDialog } from '@angular/material';
+import { DialogQrComponent } from '../dialog-qr/dialog-qr.component';
 
 @Component({
   selector: 'app-wallet',
@@ -31,7 +32,7 @@ export class WalletComponent implements OnInit {
     }
     numberOfTokens = 0;
   
-    constructor(private web3Service: Web3Service, private matSnackBar: MatSnackBar) {
+    constructor(private web3Service: Web3Service, private matSnackBar: MatSnackBar, private dialog: MatDialog) {
       console.log('Constructor: ' + web3Service);
     }
   
@@ -133,6 +134,12 @@ export class WalletComponent implements OnInit {
       window.open(url, "_blank");
     }
   
+    private openDialogQr( wallet: string){
+      const dialogRef = this.dialog.open(DialogQrComponent, {
+       
+        data: {title: 'wallet', color: 'primary', wallet: wallet }
+      });
+    }
   
   }
   

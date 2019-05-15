@@ -5,6 +5,7 @@ import { MatSnackBarModule } from '@angular/material';
 import { RouterModule } from '@angular/router';
 import { UtilModule } from '../util/util.module';
 import { WalletComponent } from './wallet.component';
+
 @NgModule({
   
   imports: [
@@ -12,7 +13,8 @@ import { WalletComponent } from './wallet.component';
       SharedModule,
       MatSnackBarModule,
       RouterModule,
-      UtilModule
+      UtilModule,
+     
     ],
     declarations: [WalletComponent],
     exports: [WalletComponent]

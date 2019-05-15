@@ -1,21 +1,25 @@
 <mat-toolbar class="toolbar">
-    <img src="../assets/img/logo-nightmode.png" width="100">
-    <span class="subtitle">Crypto</span>
+  <img src="../assets/img/logo-nightmode.png" width="100">
+  <span class="subtitle">Crypto</span>
 </mat-toolbar>
-<div >
-  <app-wallet></app-wallet>
-</div>
-<div fxLayout="column"  fxLayout.lt-lg="column"  fxLayoutAlign="start wrap" >
-        <div fxFlex="1 1">
-                <app-sale></app-sale>
-                
-            </div>
-    <div fxFlex="1 1">
-        <app-sender></app-sender>
+<div fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="start wrap">
+  <div fxFlex="1 1 20%"></div>
+  <div fxFlex="1 1 60%">
+    <div>
+      <app-wallet></app-wallet>
     </div>
-   
-</div>
-<div  >
-    <app-notice></app-notice>
+    <div fxLayout="column" fxLayout.lt-lg="column" fxLayoutAlign="start wrap">
 
+      <div fxFlex="1 1">
+        <app-sale></app-sale>
+      </div>
+
+      <div fxFlex="1 1">
+        <app-sender></app-sender>
+      </div>
+    </div>
+    <div>
+      <app-notice></app-notice>
+    </div>
+  </div>
 </div>

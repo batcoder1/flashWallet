@@ -1,8 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Optional, Inject } from '@angular/core';
 import contract from 'truffle-contract';
 import { Subject } from 'rxjs';
 import { resolve } from 'url';
 import { reject } from 'q';
+import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
+import { DialogComponent } from '../dialog/dialog.component';
 declare let require: any;
 const Web3 = require('web3');
 
@@ -12,26 +14,27 @@ declare let window: any;
 
 @Injectable()
 export class Web3Service {
+   
   private web3: any;
   private accounts: string[];
   public ready = false;
-  private contracts= {
+  private contracts = {
     calileaToken: contract,
     tokenSale: contract
 
   };
-// Contracts in Ropsten network  
-   private calileaTokenContract = '0x384549eA7d7e5A8e221f6E6bcb89E241424cFaFC'
-  private tokenSaleContract = '0xc6a1ced21b2cd67da06dbd91c67c9dff9b37e27e' 
- 
-/* Contracts in Ganache local network
-  private calileaTokenContract = '0xFB4F4Db6d9Bef350d92B6Ba14080B5A68ff9b372'
-  private tokenSaleContract = '0x9159A12d38A4BBB5f038d6691cfEec75D5acd1f5'
- */
-  
+  // Contracts in Ropsten network  
+  private calileaTokenContract = '0x384549eA7d7e5A8e221f6E6bcb89E241424cFaFC'
+  private tokenSaleContract = '0xc6a1ced21b2cd67da06dbd91c67c9dff9b37e27e'
+
+  /* Contracts in Ganache local network
+    private calileaTokenContract = '0xFB4F4Db6d9Bef350d92B6Ba14080B5A68ff9b372'
+    private tokenSaleContract = '0x9159A12d38A4BBB5f038d6691cfEec75D5acd1f5'
+   */
+
   public accountsObservable = new Subject<string[]>();
 
-  constructor() {
+  constructor( public dialog: MatDialog) {
 
 
     window.addEventListener('load', async () => {
@@ -39,10 +42,10 @@ export class Web3Service {
       await this.bootstrapWeb3();
 
     });
-    window.addEventListener('transfer', async() =>{
-        console.log('incoming transfer event')
-      });
-    window.addEventListener('TokensPurchased', async() =>{
+    window.addEventListener('transfer', async () => {
+      console.log('incoming transfer event')
+    });
+    window.addEventListener('TokensPurchased', async () => {
       console.log('incoming TokensPurchased event')
 
     });
@@ -58,7 +61,7 @@ export class Web3Service {
         await window.ethereum.enable();
         this.web3 = window.web3
         this.web3.eth.defaultAccount = this.web3.eth.accounts[0]
-        const account = await this.web3.eth.getCoinbase() 
+        const account = await this.web3.eth.getCoinbase()
         console.log(`**** Account: ${account}`)
         // Acccounts now exposed
         await this.refreshAccounts()
@@ -77,25 +80,26 @@ export class Web3Service {
     }
     // Non-dapp browsers...
     else {
-      console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+      let description = 'Non-Ethereum browser detected. You should consider trying MetaMask!'
+      this.openDialog('Error web3', description, 'danger')
+      console.log(description);
     }
 
   }
 
   public async getInstanceCalileaToken() {
-    console.log('getInstanceCalileaToken....')
     try {
-      
+
       if (!this.web3) {
         const delay = new Promise(resolve => setTimeout(resolve, 100));
         await delay;
         return await this.getInstanceCalileaToken();
       }
-      console.log ('web3 connected')
+      console.log('web3 connected')
       let contractAbstraction = contract(CalileaToken_json);
       contractAbstraction.setProvider(this.web3.currentProvider);
       contractAbstraction = await contractAbstraction.at(this.calileaTokenContract)
-        
+
 
       return contractAbstraction
     } catch (err) {
@@ -105,20 +109,19 @@ export class Web3Service {
 
   }
   public async getInstanceTokenSale() {
-    console.log('getInstanceTokenSale....')
     try {
-      
+
       if (!this.web3) {
         const delay = new Promise(resolve => setTimeout(resolve, 100));
         await delay;
         return await this.getInstanceTokenSale();
       }
-      console.log ('web3 connected')
-      
-      let contractAbstraction = contract(TokenSale_json);  
+      console.log('web3 connected')
+
+      let contractAbstraction = contract(TokenSale_json);
       contractAbstraction.setProvider(this.web3.currentProvider);
       contractAbstraction = await contractAbstraction.at(this.tokenSaleContract)
-      
+
       return contractAbstraction
 
     } catch (err) {
@@ -127,7 +130,7 @@ export class Web3Service {
     }
 
   }
-  
+
   async refreshAccounts() {
     try {
       let accs = await this.web3.eth.getAccounts()
@@ -136,18 +139,18 @@ export class Web3Service {
         return false;
       }
       if (!this.accounts || this.accounts.length !== accs.length || this.accounts[0] !== accs[0]) {
-        console.log ('accs')
-        console.log (accs)
+        console.log('accs')
+        console.log(accs)
         this.accountsObservable.next(accs);
         this.accounts = accs;
       }
 
 
       this.ready = true;
-    }catch(err){
+    } catch (err) {
       console.log('There was an error fetching your accounts.');
     }
-    
+
   }
 
   async getBalance(address) {
@@ -161,17 +164,17 @@ export class Web3Service {
 
   }
 
-  async estimateGas(data, sender){
+  async estimateGas(data, sender) {
     let toEstimate = {
       data: data,
       from: sender
     }
     let gasEstimated = await this.web3.eth.estimateGas(toEstimate)
-    console.log('GasEstimated:'+ gasEstimated)
+    console.log('GasEstimated:' + gasEstimated)
     return gasEstimated
   }
 
-  toWei(amount){
+  toWei(amount) {
     let _amount = amount
     _amount = amount.toString()
 
@@ -179,22 +182,33 @@ export class Web3Service {
     return this.web3.utils.toWei(_amount, "ether")
   }
 
-  toEther(amount){
+  toEther(amount) {
     return this.web3.utils.fromWei(amount, 'ether')
   }
-  toBigNumber(amount){
+  toBigNumber(amount) {
     return this.web3.utils.toBigNumber(amount)
   }
-    
-    // Listen for events emitted from the contract
+
+  // Listen for events emitted from the contract
   listenForEvents() {
-      this.contracts.tokenSale.Sell({}, {
-          fromBlock: 0,
-          toBlock: 'latest',
-        }).watch(function(error, event) {
-          console.log("event triggered", event);
-           
-        })
-      }
+    this.contracts.tokenSale.Sell({}, {
+      fromBlock: 0,
+      toBlock: 'latest',
+    }).watch(function (error, event) {
+      console.log("event triggered", event);
+
+    })
+  }
+  private openDialog( title: string, description: string, type: string){
     
+    let icon = (type == 'danger')? 'error': 'notification_important'
+    let color = (type == 'danger')? 'warn': 'primary'
+    
+    const dialogRef = this.dialog.open(DialogComponent, {
+      width: '350px',
+      data: {title: title,  description: description , type: type, icon: icon, color: color }
+    });
+  }
+
+
 }

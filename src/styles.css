@@ -13,7 +13,7 @@ mat-form-field {
   width: 95%;
 }
 .action-button{
-  margin-right: 5rem!important;
+  margin-right: 4rem!important;
 }
  
 
@@ -45,13 +45,13 @@ mat-form-field {
 }
 
 .dashboard-card-content {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: bold;
 
 }
 
 .wallet-card-content {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: bold;
 
 }
@@ -102,8 +102,11 @@ mat-form-field {
   color: white;
   font-size: 1.2rem;
 }
+.walletIcon {
+  width: 1.8rem;
+}
 
-@media only screen and (max-width: 730px) {
+@media only screen and ( max-width: 730px) {
   .dashboard-card-content {
     font-size: 1.2rem;
     font-weight: bold;
@@ -111,20 +114,26 @@ mat-form-field {
   }
 
   .wallet-card-content {
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: bold;
 
   }
-
+  .walletIcon {
+    width: 1rem;
+  }
   .dashboard-card-content-send {
     text-align: left;
     font-size: 0.7rem;
     font-weight: bold;
   }
+  .action-button{
+    margin-right: 2rem!important;
+  }
+   
 
 }
 
-@media only screen and (max-width: 450px) {
+@media only screen and (max-width: 550px) {
 
   .dashboard-card-content {
     font-size: 1rem !important;
@@ -132,7 +141,7 @@ mat-form-field {
   }
 
   .wallet-card-content {
-    font-size: 0.5rem !important;
+    font-size: 0.6rem !important;
     font-weight: bold;
 
   }
@@ -154,7 +163,7 @@ mat-form-field {
   }
 }
 
-@media only screen and (max-width: 330px) {
+@media only screen and (max-width: 390px) {
   .dashboard-card-content {
     font-size: 1rem !important;
     font-weight: bold;
@@ -162,7 +171,7 @@ mat-form-field {
   }
 
   .wallet-card-content {
-    font-size: 0.6rem !important;
+    font-size: 0.5rem !important;
     font-weight: bold;
 
   }
@@ -179,11 +188,4 @@ mat-form-field {
 
 }
 
-  
-@media only screen and (max-width: 600px) {
-   
- .token-card {
-   margin-right: 1rem;
- }
-}
 

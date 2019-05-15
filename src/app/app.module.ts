@@ -12,13 +12,14 @@ import { SharedModule } from './shared/shared.module';
 import { WalletModule } from './wallet/wallet.module';
 import { SaleModule } from './sale/sale.module';
 import { NoticeModule } from './notice/notice.module';
+import { NgxQRCodeModule } from 'ngx-qrcode2';
+import { DialogQrModule } from './dialog-qr/dialog-qr.module';
+import { DialogModule } from './dialog/dialog.module';
 
 
 @NgModule({
   declarations: [
-    AppComponent,
-   
-     
+    AppComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -30,7 +31,10 @@ import { NoticeModule } from './notice/notice.module';
     SaleModule,
     WalletModule,
     NoticeModule,
+    DialogModule,
+    DialogQrModule,
     SharedModule,
+    NgxQRCodeModule
   ],
 
   providers: [],
