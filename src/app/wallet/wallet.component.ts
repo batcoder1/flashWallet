@@ -134,7 +134,7 @@ export class WalletComponent implements OnInit {
       window.open(url, "_blank");
     }
   
-    private openDialogQr( wallet: string){
+    openDialogQr( wallet: string){
       const dialogRef = this.dialog.open(DialogQrComponent, {
        
         data: {title: 'wallet', color: 'primary', wallet: wallet }
