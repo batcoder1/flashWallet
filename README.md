@@ -19,3 +19,11 @@ Navigate to `http://localhost:4200/`.
 You need to have installed metamask in your browser. 
 [Metamask Chrome plugin](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=es-419
 )
+
+# Author
+
+**Enrique Rubio Sánchez**
+
+enrique.rubio.developer@gmail.com
+
+3H6wxnvmqJyCkBwu6brPGCfEWhdwJ8jpi2
